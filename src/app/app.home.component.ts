@@ -87,7 +87,7 @@ declare var bootstrap: any;
                     </div>
 
                         <div class="text-center">
-                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="!cedulaValida || !cedulaRegistrada" type="submit" disabled>VOTAR</button>
+                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="!cedulaValida" type="submit" disabled>VOTAR</button>
                         </div>
                     </form>
                     <!-- Modal -->
