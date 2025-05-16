@@ -15,7 +15,7 @@ export class RegistroVotoComponent {
     constructor(private router: Router) {}
     ngOnInit(): void {
     setTimeout(() => {
-      this.router.navigate(['/home']); // Cambia '/formulario' por la ruta deseada
-    }, 5000); // 5000 milisegundos = 5 segundos
+      this.router.navigate(['/home']); // Cambia '/home' por la ruta deseada
+    }, 10000); // 5000 milisegundos = 5 segundos
 }
 }

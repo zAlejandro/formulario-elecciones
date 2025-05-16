@@ -24,6 +24,7 @@ declare var bootstrap: any;
             <div class="container-fluid">
                 <div class="container">
                     <form class="row g-3 needs-validation novalidated">
+
                         <div class="mb-3">
                             <label for="cedulaInput" class="form-label fw-semibold">CÉDULA</label>
                             <input  
@@ -33,19 +34,29 @@ declare var bootstrap: any;
                                 (ngModelChange)="validarCedula()" 
                                 type="text" 
                                 class="form-control shadow-sm" 
-                                placeholder="000-000000-0"  
+                                placeholder="INGRESE SU CEDULA"  
                                 [ngClass]="{
                                 'is-valid': cedulaValida,
                                 'is-invalid': cedula && !cedulaValida
-                                }">
+                                }"
+                                (ngModelChange)="votoRealizado()"
+                                >
 
-                            <div class="valid-feedback">
+                            <div *ngIf="cedulaRegistrada==false" class="valid-feedback">
                                 Cédula válida.
                             </div>
                             <div class="invalid-feedback">
-                                Formato inválido. Usa 000-0000000-0
+                                Cedula invalida.
                             </div>
+                            <p class="text-center text-warning small mt-3" *ngIf="cedulaRegistrada">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                LA CEDULA INDICADA YA HA REGISTRADO UN VOTO
+                            </p>
                         </div>
+
+                        <p class="text-center text-muted small mt-3">
+                            A continuación selecciona un candidato
+                        </p>
 
                         <div class="row">
                         <!-- Opción 1 -->
@@ -76,7 +87,7 @@ declare var bootstrap: any;
                     </div>
 
                         <div class="text-center">
-                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="cedulaValida !== true" type="submit" disabled>VOTAR</button>
+                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="!cedulaValida || !cedulaRegistrada" type="submit" disabled>VOTAR</button>
                         </div>
                     </form>
                     <!-- Modal -->
@@ -129,8 +140,8 @@ export class HomeComponent {
     private api = inject(CedulaService);
     private router = inject(Router);
 
-    plancha1 = 'https://media.discordapp.net/attachments/753449414361874524/1372588894448652439/PADRON_1.png?ex=68275285&is=68260105&hm=d6113f715387f4d0ed225fadd5ba63b48c336206bba673880211908b182c56f2&=&format=webp&quality=lossless'
-    plancha2 = 'https://media.discordapp.net/attachments/753449414361874524/1372588894893244518/PADRON_2.png?ex=68275286&is=68260106&hm=8748a779355abae42b65ebd7cd14573fce263cf686a1b062b68972f32a30494d&=&format=webp&quality=lossless';
+    plancha1 = 'https://media.discordapp.net/attachments/753449414361874524/1372931483727167558/plantilla-votacion-plancha-1.png?ex=68289195&is=68274015&hm=7c8a0d4db49db052fd2760208dedcee82e1fe63f0ad3aadfb26452ab145e999e&=&format=webp&quality=lossless&width=529&height=769'
+    plancha2 = 'https://media.discordapp.net/attachments/753449414361874524/1372931484385808565/plantilla-votacion-plancha-2.png?ex=68289195&is=68274015&hm=28ed00dd12491b0a8eb9c79a7fa748d3ad25d9b7adbb8cbdfe4aa8f8b559ca39&=&format=webp&quality=lossless&width=529&height=769';
 
     cedula = "";
     voto = 0;
@@ -160,6 +171,7 @@ export class HomeComponent {
 
     resaltado: boolean = false;
     confirmarBoton: boolean = false;
+    cedulaRegistrada: boolean = false;
 
     alternarBorde(id: number) {
         this.voto = id;
@@ -188,6 +200,16 @@ export class HomeComponent {
 
     confirmarVoto(){
         this.guardarVoto(this.cedula);
+    }
+
+    async votoRealizado(){
+        const existe = await this.verificarDuplicado(this.cedula);
+
+        if(existe){
+            this.cedulaRegistrada = true;
+        }else{
+            this.cedulaRegistrada = false
+        }
     }
 
     async guardarVoto(cedula: string){
