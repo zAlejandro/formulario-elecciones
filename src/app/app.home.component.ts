@@ -77,7 +77,6 @@ export class HomeComponent {
     async enviar(){
         if(this.voto != 0){
             this.guardarVoto(this.cedula);
-            this.concluirVoto();
         }
     }
 
@@ -99,11 +98,12 @@ export class HomeComponent {
             voto: this.voto
         };
 
-        if (existe && this.voto < 0){
+        if (existe){
             console.warn("ESTA CEDULA YA HA VOTADO");
             console.log
         }else{
-           await addDoc(ref,datos);
+            await addDoc(ref,datos);
+            this.concluirVoto();
         }
     }
 
