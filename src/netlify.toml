@@ -1,0 +1,6 @@
+[build]
+  command = "ng build"
+  publish = "dist/FormularioElecciones"
+
+[[plugins]]
+  package = "@netlify/plugin-angular" # <- Elimina o comenta esta línea si existe
