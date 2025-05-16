@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
 
+declare var bootstrap: any;
+
 
 
 @Component({
@@ -21,22 +23,95 @@ import { Router } from '@angular/router';
         <div class="container">
             <form class="row g-3 needs-validation novalidated">
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">CEDULA</label>
-                    <input  name="cedula" [(ngModel)]="cedula" (ngModelChange)="validarCedula()" type="text" class="form-control" placeholder="000-000000-0"  [ngClass]="{'is-valid': cedulaValida}">
+                    <label for="cedulaInput" class="form-label fw-semibold">CÉDULA</label>
+                    <input  
+                        id="cedulaInput"
+                        name="cedula"
+                        [(ngModel)]="cedula" 
+                        (ngModelChange)="validarCedula()" 
+                        type="text" 
+                        class="form-control shadow-sm" 
+                        placeholder="000-000000-0"  
+                        [ngClass]="{
+                        'is-valid': cedulaValida,
+                        'is-invalid': cedula && !cedulaValida
+                        }">
+
+                    <div class="valid-feedback">
+                        Cédula válida.
+                    </div>
+                    <div class="invalid-feedback">
+                        Formato inválido. Usa 000-0000000-0
+                    </div>
                 </div>
 
-                <div class="col-6 d-flex gap-3" (click)="alternarBorde(1)" [ngClass]="{'border border-info border-3': voto === 1}">
-                    <img  class="img-fluid" [src]="plancha1" alt="Avatar" width="500">
+                <div class="row">
+                <!-- Opción 1 -->
+                <div class="col-md-6 mb-4">
+                    <div 
+                        class="card option-card text-center p-3 h-100 cursor-pointer"
+                        [ngClass]="{'border border-info border-4 shadow-lg': voto === 1}"
+                        (click)="alternarBorde(1)" >
+                        <img [src]="plancha1" class="card-img-top img-fluid mb-3" alt="Plancha 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Opción 1</h5>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col-6 d-flex gap-3" (click)="alternarBorde(2)" [ngClass]="{'border border-info border-3': voto === 2}">
-                    <img  class="img-fluid" [src]="plancha2" alt="Avatar" width="500">
+                <!-- Opción 2 -->
+                <div class="col-md-6 mb-4">
+                    <div 
+                        class="card option-card text-center p-3 h-100 cursor-pointer"
+                        [ngClass]="{'border border-info border-4 shadow-lg': voto === 2}"
+                        (click)="alternarBorde(2)">
+                        <img [src]="plancha2" class="card-img-top img-fluid mb-3" alt="Plancha 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Opción 2</h5>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
                 <div class="text-center">
-                    <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="cedulaValida !== true"  type="submit" disabled>VOTAR</button>
+                    <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="cedulaValida !== true" type="submit" disabled>VOTAR</button>
                 </div>
             </form>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">CONFIRMAR VOTO</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    ESTA SEGURO?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
+                    <button id="confirmButton" (click)="confirmarVoto()" type="button" class="btn btn-primary">SI</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Warning Modal -->
+            <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content border-danger">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="alertModalLabel">¡Advertencia!</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>DEBES VOTAR POR UNA PLANCHA PARA CONTINUAR.</strong></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Entendido</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -56,6 +131,18 @@ export class HomeComponent {
     voto = 0;
 
     botonActivo = false;
+    modalRef: any;
+
+    abrirModal() {
+        const el = document.getElementById('exampleModal');
+        console.log(el);
+        this.modalRef = new bootstrap.Modal(el);
+        this.modalRef.show();
+    }
+
+    cerrarModal() {
+        this.modalRef?.hide();
+    }
 
     form: FormGroup = this.fb.group({
         nombre: ['', Validators.required],
@@ -67,6 +154,7 @@ export class HomeComponent {
     cedulaValida: boolean | false = false;
 
     resaltado: boolean = false;
+    confirmarBoton: boolean = false;
 
     alternarBorde(id: number) {
         this.voto = id;
@@ -76,7 +164,11 @@ export class HomeComponent {
 
     async enviar(){
         if(this.voto != 0){
-            this.guardarVoto(this.cedula);
+            this.abrirModal();
+        }else{
+            const el = document.getElementById('alertModal');
+            this.modalRef = new bootstrap.Modal(el);
+            this.modalRef.show();
         }
     }
 
@@ -89,7 +181,12 @@ export class HomeComponent {
         return !snapshot.empty;
     }
 
+    confirmarVoto(){
+        this.guardarVoto(this.cedula);
+    }
+
     async guardarVoto(cedula: string){
+        this.confirmarBoton = true;
         const existe = await this.verificarDuplicado(this.cedula);
         
         const ref = collection(this.firestore, 'votantes');
@@ -104,6 +201,8 @@ export class HomeComponent {
         }else{
             await addDoc(ref,datos);
             this.concluirVoto();
+            this.cerrarModal();
+            this.confirmarBoton = false;
         }
     }
 
