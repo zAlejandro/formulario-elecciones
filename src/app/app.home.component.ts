@@ -20,7 +20,7 @@ declare var bootstrap: any;
     template:
     `
     <div class="container d-flex justify-content-center align-items-center min-vh-100" style="background-image: url('assets/fondo.jpg'); background-size: cover; background-position: center;">
-        <div class="card p-4 shadow-lg" style="max-width: 85%; width: 90%; background-color: rgba(255, 255, 255, 0.9);">
+        <div class="card p-4 shadow-lg" style="max-width: 80%; width: 80%; background-color: rgba(255, 255, 255, 0.9);">
             <div class="container-fluid">
                 <div class="container">
                     <form class="row g-3 needs-validation novalidated">

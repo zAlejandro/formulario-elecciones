@@ -36,21 +36,47 @@
   width: 100%;
 }
 
+.background-blur {
+  background-image: url('https://palacionacional.gob.do/assets/Historia.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(5px); /* difumina */
+  opacity: 0.6;       /* opcional: transparencia */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* para que quede detrás del contenido */
+}
+
+.contenido-principal {
+  z-index: 1;
+}
+
+
 </style>
 
-<nav class="navbar navbar-expand-lg bg-danger shadow py-2">
-  <div class="container">
-    <a class="navbar-brand text-white fw-bold" href="home">TITULO DE EJEMPLO</a>
-    <ul class="navbar-nav ms-auto">
-      <li class="nav-item">
-        <a class="nav-link custom-link" href="home">Inicio</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<div class="background-blur"></div>
 
-<main class="main">
-  <div></div>
-</main>
+<div class="contenido-principal position-relative">
+  <nav class="navbar navbar-expand-lg bg-danger shadow py-2">
+    <div class="container">
+      <a class="navbar-brand text-white fw-bold" href="home">TITULO DE EJEMPLO</a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link custom-link" href="home">Inicio</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div></div>
+  </main>
+</div>
+
+
+
 
 <router-outlet />
