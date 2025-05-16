@@ -100,10 +100,14 @@ declare var bootstrap: any;
                         </div>
                         <div class="modal-body">
                             ESTA SEGURO?
+                            <p class=" text-warning small mt-3" *ngIf="cedulaRegistrada">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                LA CEDULA INDICADA YA HA REGISTRADO UN VOTO
+                            </p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
-                            <button id="confirmButton" (click)="confirmarVoto()" type="button" class="btn btn-primary">SI</button>
+                            <button id="confirmButton" (click)="confirmarVoto()"  type="button" class="btn btn-primary" [disabled]="cedulaRegistrada">SI</button>
                         </div>
                         </div>
                     </div>
