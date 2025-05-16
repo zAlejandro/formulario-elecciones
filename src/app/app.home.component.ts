@@ -19,101 +19,106 @@ declare var bootstrap: any;
     imports: [CommonModule, ReactiveFormsModule, FormsModule],
     template:
     `
-    <div class="container-fluid">
-        <div class="container">
-            <form class="row g-3 needs-validation novalidated">
-                <div class="mb-3">
-                    <label for="cedulaInput" class="form-label fw-semibold">CÉDULA</label>
-                    <input  
-                        id="cedulaInput"
-                        name="cedula"
-                        [(ngModel)]="cedula" 
-                        (ngModelChange)="validarCedula()" 
-                        type="text" 
-                        class="form-control shadow-sm" 
-                        placeholder="000-000000-0"  
-                        [ngClass]="{
-                        'is-valid': cedulaValida,
-                        'is-invalid': cedula && !cedulaValida
-                        }">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100" style="background-image: url('assets/fondo.jpg'); background-size: cover; background-position: center;">
+        <div class="card p-4 shadow-lg" style="max-width: 85%; width: 90%; background-color: rgba(255, 255, 255, 0.9);">
+            <div class="container-fluid">
+                <div class="container">
+                    <form class="row g-3 needs-validation novalidated">
+                        <div class="mb-3">
+                            <label for="cedulaInput" class="form-label fw-semibold">CÉDULA</label>
+                            <input  
+                                id="cedulaInput"
+                                name="cedula"
+                                [(ngModel)]="cedula" 
+                                (ngModelChange)="validarCedula()" 
+                                type="text" 
+                                class="form-control shadow-sm" 
+                                placeholder="000-000000-0"  
+                                [ngClass]="{
+                                'is-valid': cedulaValida,
+                                'is-invalid': cedula && !cedulaValida
+                                }">
 
-                    <div class="valid-feedback">
-                        Cédula válida.
-                    </div>
-                    <div class="invalid-feedback">
-                        Formato inválido. Usa 000-0000000-0
-                    </div>
-                </div>
+                            <div class="valid-feedback">
+                                Cédula válida.
+                            </div>
+                            <div class="invalid-feedback">
+                                Formato inválido. Usa 000-0000000-0
+                            </div>
+                        </div>
 
-                <div class="row">
-                <!-- Opción 1 -->
-                <div class="col-md-6 mb-4">
-                    <div 
-                        class="card option-card text-center p-3 h-100 cursor-pointer"
-                        [ngClass]="{'border border-info border-4 shadow-lg': voto === 1}"
-                        (click)="alternarBorde(1)" >
-                        <img [src]="plancha1" class="card-img-top img-fluid mb-3" alt="Plancha 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Opción 1</h5>
+                        <div class="row">
+                        <!-- Opción 1 -->
+                        <div class="col-md-6 mb-4">
+                            <div 
+                                class="card option-card text-center p-3 h-100 cursor-pointer"
+                                [ngClass]="{'border border-info border-4 shadow-lg': voto === 1}"
+                                (click)="alternarBorde(1)" >
+                                <img [src]="plancha1" class="card-img-top img-fluid mb-3" alt="Plancha 1">
+                                <div class="card-body">
+                                    <h5 class="card-title">Opción 1</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opción 2 -->
+                        <div class="col-md-6 mb-4">
+                            <div 
+                                class="card option-card text-center p-3 h-100 cursor-pointer"
+                                [ngClass]="{'border border-info border-4 shadow-lg': voto === 2}"
+                                (click)="alternarBorde(2)">
+                                <img [src]="plancha2" class="card-img-top img-fluid mb-3" alt="Plancha 2">
+                                <div class="card-body">
+                                    <h5 class="card-title">Opción 2</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Opción 2 -->
-                <div class="col-md-6 mb-4">
-                    <div 
-                        class="card option-card text-center p-3 h-100 cursor-pointer"
-                        [ngClass]="{'border border-info border-4 shadow-lg': voto === 2}"
-                        (click)="alternarBorde(2)">
-                        <img [src]="plancha2" class="card-img-top img-fluid mb-3" alt="Plancha 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Opción 2</h5>
+                        <div class="text-center">
+                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="cedulaValida !== true" type="submit" disabled>VOTAR</button>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-                <div class="text-center">
-                    <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="cedulaValida !== true" type="submit" disabled>VOTAR</button>
-                </div>
-            </form>
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">CONFIRMAR VOTO</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    ESTA SEGURO?
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
-                    <button id="confirmButton" (click)="confirmarVoto()" type="button" class="btn btn-primary">SI</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Warning Modal -->
-            <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content border-danger">
-                        <div class="modal-header bg-danger text-white">
-                            <h5 class="modal-title" id="alertModalLabel">¡Advertencia!</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </form>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">CONFIRMAR VOTO</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p><strong>DEBES VOTAR POR UNA PLANCHA PARA CONTINUAR.</strong></p>
+                            ESTA SEGURO?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Entendido</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
+                            <button id="confirmButton" (click)="confirmarVoto()" type="button" class="btn btn-primary">SI</button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    <!-- Warning Modal -->
+                    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content border-danger">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="alertModalLabel">¡Advertencia!</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>DEBES VOTAR POR UNA PLANCHA PARA CONTINUAR.</strong></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Entendido</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
     
   `
 })
