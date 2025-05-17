@@ -144,7 +144,7 @@ export class HomeComponent {
     private api = inject(CedulaService);
     private router = inject(Router);
 
-    plancha1 = 'https://drive.usercontent.google.com/download?id=1N9F18uC12okhhix1-1sZnNaFJ9fam_Za'
+    plancha1 = './app/resources/img/plantilla-votacion-plancha-1.png'
     plancha2 = 'https://media.discordapp.net/attachments/753449414361874524/1372931484385808565/plantilla-votacion-plancha-2.png?ex=68289195&is=68274015&hm=28ed00dd12491b0a8eb9c79a7fa748d3ad25d9b7adbb8cbdfe4aa8f8b559ca39&=&format=webp&quality=lossless&width=529&height=769';
 
     cedula = "";
