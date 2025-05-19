@@ -156,12 +156,18 @@ export class HomeComponent {
     voto = 0;
 
     botonActivo = false;
-    votacionActiva = false;
+    votacionActiva = true;
     modalRef: any;
 
     datos: any[] = [];
+    excepciones: any[] = [];
 
     getDatos(){
+        const coleccion = collection(this.firestore, 'sistema');
+        return collectionData(coleccion, { idField: 'id'});
+    }
+
+    getExcepciones(){
         const coleccion = collection(this.firestore, 'sistema');
         return collectionData(coleccion, { idField: 'id'});
     }
@@ -174,6 +180,10 @@ export class HomeComponent {
             console.log(this.datos[0].activo);
             this.votacionActiva = this.datos[0].activo
         })
+        this.getExcepciones().subscribe((res) =>{
+            this.excepciones = res;
+            console.log(this.excepciones);
+        })
         
     }
 
@@ -183,7 +193,7 @@ export class HomeComponent {
         });
         const horaRD = new Date(fechaRD).getHours();
 
-        if(horaRD >= 15){
+        if(horaRD >= 18){
             this.votacionActiva = false;
         }else{
             this.votacionActiva = true;
