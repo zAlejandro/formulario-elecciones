@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms'
 import { Firestore, collection, addDoc, query, where, collectionData, getDocs} from '@angular/fire/firestore';
 import { CedulaService } from './servicios/cedula.service';
-import { catchError, debounce, debounceTime, distinctUntilChanged, map, of, switchMap } from 'rxjs';
+import { catchError, debounce, debounceTime, distinctUntilChanged, find, map, of, switchMap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
@@ -159,6 +159,8 @@ export class HomeComponent {
     votacionActiva = false;
     modalRef: any;
 
+    permitirExcepcion = false;
+
     datos: any[] = [];
     excepciones: any[] = [];
 
@@ -168,8 +170,25 @@ export class HomeComponent {
     }
 
     getExcepciones(){
-        const coleccion = collection(this.firestore, 'sistema');
+        const coleccion = collection(this.firestore, 'excepciones');
         return collectionData(coleccion, { idField: 'id'});
+    }
+    async verificarExcepcion(cedula: string){
+        const cedulaRef = collection(this.firestore, 'excepciones');
+        const q = query(cedulaRef, where('cedula', '==', this.cedula));
+        const snapshot = await getDocs(q);
+        console.log("excepcion: ",snapshot.docs);
+
+        return !snapshot.empty;
+    }
+    async excepcionesAgregadas(){
+        const existe = await this.verificarExcepcion(this.cedula);
+
+        if(existe){
+            console.log("tenemos una excepcion");
+        }else{
+            console.log("no hay ecepciones")
+        }
     }
 
 
@@ -180,11 +199,6 @@ export class HomeComponent {
             console.log(this.datos[1].activo);
             this.votacionActiva = this.datos[1].activo
         })
-        this.getExcepciones().subscribe((res) =>{
-            this.excepciones = res;
-            console.log(this.excepciones);
-        })
-        
     }
 
     verificarHora(){
@@ -294,6 +308,8 @@ export class HomeComponent {
         const votantesRef = collection(this.firestore, 'votantes');
         const q = query(votantesRef, where('cedula', '==', this.cedula));
 
+        
+
         collectionData(q).subscribe(data => {
             if (this.cedulaValida == true && data.length == 0){
                 this.botonActivo = true;
@@ -312,6 +328,19 @@ export class HomeComponent {
             ).subscribe(respuesta => {
                 console.log("Respuesta de la API:", respuesta);
                 this.cedulaValida = respuesta.valid;
+                this.getExcepciones().subscribe((res) =>{
+                this.excepciones = res;
+                this.excepciones.forEach((excepcion, index) => {
+                    console.log("excepcion: ", excepcion.cedula)
+                    if(this.cedula == String(excepcion.cedula)){
+                        console.warn(excepcion.cedula);
+                        this.cedulaValida = true;
+                        return;
+                    }else{
+
+                    }
+                })
+            })
                 console.log("valor de cedulaValida: ", this.cedulaValida);
             });
         } catch (e) {
