@@ -159,8 +159,22 @@ export class HomeComponent {
     votacionActiva = false;
     modalRef: any;
 
+    datos: any[] = [];
+
+    getDatos(){
+        const coleccion = collection(this.firestore, 'sistema');
+        return collectionData(coleccion, { idField: 'id'});
+    }
+
+
     ngOnInit(): void{
         this.verificarHora();
+        this.getDatos().subscribe((res) =>{
+            this.datos = res;
+            console.log(this.datos[0].activo);
+            this.votacionActiva = this.datos[0].activo
+        })
+        
     }
 
     verificarHora(){
@@ -255,10 +269,12 @@ export class HomeComponent {
             console.warn("ESTA CEDULA YA HA VOTADO");
             console.log
         }else{
-            await addDoc(ref,datos);
-            this.concluirVoto();
-            this.cerrarModal();
-            this.confirmarBoton = false;
+            if(this.votacionActiva){
+                await addDoc(ref,datos);
+                this.concluirVoto();
+                this.cerrarModal();
+                this.confirmarBoton = false;
+            }
         }
     }
 
@@ -295,6 +311,4 @@ export class HomeComponent {
     concluirVoto(){
         this.router.navigate(['/registro']);
     }
-
-
 }
