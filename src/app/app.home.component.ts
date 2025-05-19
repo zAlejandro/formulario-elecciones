@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms'
@@ -87,7 +87,12 @@ declare var bootstrap: any;
                     </div>
 
                         <div class="text-center">
-                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="!cedulaValida" type="submit" disabled>VOTAR</button>
+                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="!cedulaValida" *ngIf="votacionActiva" type="submit" disabled>VOTAR</button>
+                            
+                            <p class=" text-warning small mt-3" *ngIf="votacionActiva==false">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                LAS VOTACIONES YA HAN CONCLUIDO. GRACIAS POR SU PARTICIMACION
+                            </p>
                         </div>
                     </form>
                     <!-- Modal -->
@@ -151,7 +156,27 @@ export class HomeComponent {
     voto = 0;
 
     botonActivo = false;
+    votacionActiva = false;
     modalRef: any;
+
+    ngOnInit(): void{
+        this.verificarHora();
+    }
+
+    verificarHora(){
+        const fechaRD = new Date().toLocaleString('en-US', {
+            timeZone: 'America/Santo_Domingo',
+        });
+        const horaRD = new Date(fechaRD).getHours();
+
+        if(horaRD >= 15){
+            this.votacionActiva = false;
+        }else{
+            this.votacionActiva = true;
+        }
+    }
+
+
 
     abrirModal() {
         const el = document.getElementById('exampleModal');
