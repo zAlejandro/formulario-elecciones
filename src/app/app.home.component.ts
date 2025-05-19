@@ -181,6 +181,7 @@ export class HomeComponent {
 
         return !snapshot.empty;
     }
+    
     async excepcionesAgregadas(){
         const existe = await this.verificarExcepcion(this.cedula);
 
@@ -200,7 +201,7 @@ export class HomeComponent {
             this.votacionActiva = this.datos[1].activo
         })
     }
-
+    // Verifica la hora en la Republica Dominicana
     verificarHora(){
         const fechaRD = new Date().toLocaleString('en-US', {
             timeZone: 'America/Santo_Domingo',
@@ -216,14 +217,14 @@ export class HomeComponent {
     }
 
 
-
+    // Abre el modal de confirmacion
     abrirModal() {
         const el = document.getElementById('exampleModal');
         console.log(el);
         this.modalRef = new bootstrap.Modal(el);
         this.modalRef.show();
     }
-
+    // Cierra el modal activo
     cerrarModal() {
         this.modalRef?.hide();
     }
@@ -241,12 +242,13 @@ export class HomeComponent {
     confirmarBoton: boolean = false;
     cedulaRegistrada: boolean = false;
 
+    // Borde de seleccion para indicar la opcion seleccionada
     alternarBorde(id: number) {
         this.voto = id;
         console.log(this.voto);
     }
 
-
+    // Abre el Modal de alerta
     async enviar(){
         if(this.voto != 0){
             this.abrirModal();
@@ -257,7 +259,7 @@ export class HomeComponent {
         }
     }
 
-
+    // Verifica si la cedula digitada ya se encuentra en la Base de Datos
     async verificarDuplicado(cedula: string): Promise<boolean>{
         const cedulaRef = collection(this.firestore, 'votantes');
         const q = query(cedulaRef, where('cedula', '==', cedula));
@@ -265,11 +267,11 @@ export class HomeComponent {
 
         return !snapshot.empty;
     }
-
+    // Guarda el voto (para el boton de confirmacion)
     confirmarVoto(){
         this.guardarVoto(this.cedula);
     }
-
+    // Verificacion para WARNING de cedula ya utilizada
     async votoRealizado(){
         const existe = await this.verificarDuplicado(this.cedula);
 
@@ -279,7 +281,7 @@ export class HomeComponent {
             this.cedulaRegistrada = false
         }
     }
-
+    // Guarda el voto en la Base de Datos
     async guardarVoto(cedula: string){
         this.confirmarBoton = true;
         const existe = await this.verificarDuplicado(this.cedula);
@@ -303,7 +305,7 @@ export class HomeComponent {
         }
     }
 
-
+    // Valida la cedula con la API de la junta
     async validarCedula(){
         const votantesRef = collection(this.firestore, 'votantes');
         const q = query(votantesRef, where('cedula', '==', this.cedula));
@@ -341,7 +343,6 @@ export class HomeComponent {
                     }
                 })
             })
-                console.log("valor de cedulaValida: ", this.cedulaValida);
             });
         } catch (e) {
             console.error(e);
@@ -349,6 +350,6 @@ export class HomeComponent {
     }
 
     concluirVoto(){
-        this.router.navigate(['/registro']);
+        this.router.navigate(['/registro']); // Te lleva a la vista de confirmacion para conocimiento del usuario
     }
 }
