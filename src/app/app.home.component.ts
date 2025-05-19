@@ -87,7 +87,7 @@ declare var bootstrap: any;
                     </div>
 
                         <div class="text-center">
-                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="!cedulaValida" *ngIf="votacionActiva" type="submit" disabled>VOTAR</button>
+                            <button (click)="enviar()" class="btn btn-primary w-25 p-3" [disabled]="!cedulaValida" type="submit" *ngIf="votacionActiva" disabled>VOTAR</button>
                             
                             <p class=" text-warning small mt-3" *ngIf="votacionActiva==false">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -156,7 +156,7 @@ export class HomeComponent {
     voto = 0;
 
     botonActivo = false;
-    votacionActiva = true;
+    votacionActiva = false;
     modalRef: any;
 
     datos: any[] = [];
@@ -177,8 +177,8 @@ export class HomeComponent {
         this.verificarHora();
         this.getDatos().subscribe((res) =>{
             this.datos = res;
-            console.log(this.datos[0].activo);
-            this.votacionActiva = this.datos[0].activo
+            console.log(this.datos[1].activo);
+            this.votacionActiva = this.datos[1].activo
         })
         this.getExcepciones().subscribe((res) =>{
             this.excepciones = res;
@@ -192,8 +192,9 @@ export class HomeComponent {
             timeZone: 'America/Santo_Domingo',
         });
         const horaRD = new Date(fechaRD).getHours();
+        console.log(horaRD)
 
-        if(horaRD >= 18){
+        if(horaRD >= 15){
             this.votacionActiva = false;
         }else{
             this.votacionActiva = true;
